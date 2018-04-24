@@ -1,0 +1,16 @@
+install RPi.GPIO if necessary:
+
+sudo apt-get update
+sudo apt-get install build-essential python-dev python-pip
+sudo pip install RPi.GPIO
+
+install python-imaging and smbus:
+
+sudo apt-get install python-imaging python-smbus
+
+install git and download ssd1306 library:
+
+sudo apt-get install git
+git clone https://github.com/adafruit/Adafruit_Python_SSD1306.git
+cd Adafruit_Python_SSD1306
+sudo python setup.py install

@@ -1,0 +1,71 @@
+
+<head>
+  <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+</head>
+<body>
+  <div id="graph"></div>
+</body>
+
+<script>
+
+var buffersize=7200;
+var xArray = [];
+var y1Array = [];
+var y2Array = [];
+
+var data = [{
+  x: [], 
+  y: [],
+  mode: 'lines',
+  line: {color: '#80CAF6'}
+}, {
+  x: [],
+  y: [],
+  mode: 'lines',
+  line: {color: '#DF56F1'}
+}] 
+
+
+Plotly.plot('graph', data);  
+
+ function addPoint(recv) {
+  	  var data= JSON.parse(recv);
+  	  xArray = xArray.concat([data.x]);
+  	  y1Array = y1Array.concat([data.y1]);
+  	  y2Array = y2Array.concat([data.y2]);
+  	  if (xArray.length > buffersize){
+  	  xArray.splice(0, 1);
+      y1Array.splice(0, 1);
+      y2Array.splice(0, 1);
+  	  }
+      var update = {
+          x: [xArray, xArray],
+          y: [y1Array, y2Array],
+      };
+      Plotly.update('graph', update);
+     // Plotly.extendTraces('graph', update, [0, 1])
+};
+
+
+        ws=null;
+		ws = new WebSocket("ws://localhost:8082")
+		ws.onopen=function(){
+		 	ws.send('I am alive.');
+		}
+		ws.onclose=function(){
+		  	alert("Connection to web server is lost.");
+		  	ws=null;
+		}
+		ws.onerror=function(){
+			alert("Connection to web server is lost.");
+		  	ws=null;
+		}
+		ws.onmessage=function(t){
+			addPoint(t.data);
+		}
+
+
+</script>
+</html>
+
+
